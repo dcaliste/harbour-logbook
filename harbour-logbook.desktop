@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Log book
+Icon=icon-launcher-mad-developer
+Exec=/usr/bin/sailjail -p harbour-logbook.desktop /usr/bin/sailfish-qml harbour-logbook
+Comment=Browse Buteo sync logs
+
+[X-Sailjail]
+Permissions=Accounts;Calendar;Privileged;Synchronization
+OrganizationName=com.jolla
+ApplicationName=logbook
