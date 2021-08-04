@@ -5,8 +5,9 @@ Release:    1
 License:    LGPL
 URL:        https://github.com/dcaliste/harbour-logbook
 Source0:    %{name}-%{version}.tar.bz2
-Requires:  buteo-syncfw-qml-plugin
-Requires:  nemo-qml-plugin-calendar-qt5
+Requires:  buteo-syncfw-qml-plugin >= 0.10.8
+Requires:  nemo-qml-plugin-calendar-qt5 >= 0.6.20
+Requires:  sailfish-components-calendar-qt5 >= 1.0.29
 
 %description
 An application to browse the sync log from Buteo.

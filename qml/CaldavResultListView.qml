@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import Sailfish.Calendar 1.0
 import org.nemomobile.calendar 1.0
 
 Column {
@@ -14,7 +15,7 @@ Column {
     Repeater {
         width: parent.width
         model: eventList
-        delegate: EventListDelegate {}
+        delegate: CalendarEventListDelegate {useActiveDay: false}
     }
 
     Label {
