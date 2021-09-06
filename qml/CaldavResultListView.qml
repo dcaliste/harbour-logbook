@@ -25,7 +25,22 @@ Column {
         width: parent.width
         model: eventList
         delegate: CalendarEventListDelegate {
-            useActiveDay: false
+            timeText: {
+                if (model.occurrence.startTime.getFullYear() == model.occurrence.endTime.getFullYear()
+                    && model.occurrence.startTime.getMonth() == model.occurrence.endTime.getMonth()
+                    && model.occurrence.startTime.getDate() == model.occurrence.endTime.getDate()) {
+                    return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium) + " "
+                        + (model.event.allDay
+                           ? "all day"
+                           : (Format.formatDate(model.occurrence.startTime, Formatter.TimeValue) + "-"
+                              + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
+                } else {
+                    return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium)
+                        + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.startTime, Formatter.TimeValue)))
+                        + " - " + Format.formatDate(model.occurrence.endTime, Formatter.DateMedium)
+                        + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
+                }
+            }
             onClicked: {
                 calendar.call("viewEvent",
                     [
