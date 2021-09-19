@@ -18,6 +18,7 @@ Page {
         for (var i = 0; i < results.length; i++) {
             uids = uids.concat(results[i].localAdditions)
             uids = uids.concat(results[i].localModifications)
+            uids = uids.concat(results[i].localFailures)
         }
         return uids
     }
@@ -27,6 +28,7 @@ Page {
         for (var i = 0; i < results.length; i++) {
             uids = uids.concat(results[i].remoteAdditions)
             uids = uids.concat(results[i].remoteModifications)
+            uids = uids.concat(results[i].remoteFailures)
         }
         return uids
     }
