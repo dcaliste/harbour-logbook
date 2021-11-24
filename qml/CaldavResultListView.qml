@@ -6,6 +6,7 @@ import org.nemomobile.dbus 2.0
 
 Column {
     property alias model: eventList.identifiers
+    property var failureMessages
 
     EventListModel {
         id: eventList
@@ -24,30 +25,44 @@ Column {
     Repeater {
         width: parent.width
         model: eventList
-        delegate: CalendarEventListDelegate {
-            timeText: {
-                if (model.occurrence.startTime.getFullYear() == model.occurrence.endTime.getFullYear()
-                    && model.occurrence.startTime.getMonth() == model.occurrence.endTime.getMonth()
-                    && model.occurrence.startTime.getDate() == model.occurrence.endTime.getDate()) {
-                    return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium) + " "
-                        + (model.event.allDay
-                           ? "all day"
-                           : (Format.formatDate(model.occurrence.startTime, Formatter.TimeValue) + "-"
-                              + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
-                } else {
-                    return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium)
-                        + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.startTime, Formatter.TimeValue)))
-                        + " - " + Format.formatDate(model.occurrence.endTime, Formatter.DateMedium)
-                        + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
+        delegate:  Column {
+            width: parent.width
+            CalendarEventListDelegate {
+                timeText: {
+                    if (model.occurrence.startTime.getFullYear() == model.occurrence.endTime.getFullYear()
+                        && model.occurrence.startTime.getMonth() == model.occurrence.endTime.getMonth()
+                        && model.occurrence.startTime.getDate() == model.occurrence.endTime.getDate()) {
+                        return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium) + " "
+                            + (model.event.allDay
+                               ? "all day"
+                               : (Format.formatDate(model.occurrence.startTime, Formatter.TimeValue) + "-"
+                                  + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
+                    } else {
+                        return (Format.formatDate(model.occurrence.startTime, Formatter.DateMedium)
+                            + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.startTime, Formatter.TimeValue)))
+                            + " - " + Format.formatDate(model.occurrence.endTime, Formatter.DateMedium)
+                            + (model.event.allDay ? "" : (" " + Format.formatDate(model.occurrence.endTime, Formatter.TimeValue))))
+                    }
+                }
+                onClicked: {
+                    calendar.call("viewEvent",
+                        [
+                            model.event.uniqueId,
+                            model.event.recurrenceId,
+                            Qt.formatDateTime(model.occurrence.startTime, Qt.ISODate)
+                        ])
                 }
             }
-            onClicked: {
-                calendar.call("viewEvent",
-                    [
-                        model.event.uniqueId,
-                        model.event.recurrenceId,
-                        Qt.formatDateTime(model.occurrence.startTime, Qt.ISODate)
-                    ])
+            Label {
+                property bool hasMessage: failureMessages[model.identifier] !== undefined
+                x: Theme.horizontalPageMargin + Theme.paddingLarge
+                width: parent.width - x - Theme.horizontalPageMargin
+                visible: hasMessage
+                text: hasMessage ? failureMessages[model.identifier] : ""
+                color: Theme.secondaryColor
+                wrapMode: Text.Wrap
+                font.pixelSize: Theme.fontSizeExtraSmall
+                font.family: "monospace"
             }
         }
     }

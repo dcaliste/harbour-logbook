@@ -77,6 +77,15 @@ Page {
                     }
                     return n ? "%1 incidence(s) deleted on device".arg(n) : ""
                 }
+                failureMessages: {
+                    var messages = {}
+                    for (var i = 0; i < syncResults.length; i++) {
+                        for (var j = 0; j < syncResults[i].localFailures.length; j++) {
+                            messages[syncResults[i].localFailures[j]] = syncResults[i].localMessage(syncResults[i].localFailures[j])
+                        }
+                    }
+                    return messages
+                }
                 visible: _itemDelegate.length > 0
             }
             SyncItemListView {
@@ -89,6 +98,15 @@ Page {
                         n += syncResults[i].remoteDeletions.length
                     }
                     return n ? "%1 incidence(s) remotely deleted".arg(n) : ""
+                }
+                failureMessages: {
+                    var messages = {}
+                    for (var i = 0; i < syncResults.length; i++) {
+                        for (var j = 0; j < syncResults[i].remoteFailures.length; j++) {
+                            messages[syncResults[i].remoteFailures[j]] = syncResults[i].remoteMessage(syncResults[i].remoteFailures[j])
+                        }
+                    }
+                    return messages
                 }
                 visible: _itemDelegate.length > 0
             }

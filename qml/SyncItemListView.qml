@@ -6,6 +6,7 @@ Column {
     property alias deletedItemText: deleted.text
     property string delegate
     property var itemUids
+    property var failureMessages
     property int deletedItemCount: 0
     width: parent.width
     Label {
@@ -19,7 +20,10 @@ Column {
         width: parent.width
         active: itemUids.length > 0
         source: delegate
-        onLoaded: item.model = itemUids
+        onLoaded: {
+            item.model = itemUids
+            item.failureMessages = failureMessages
+        }
     }
     Label {
         width: parent.width - 2 * Theme.horizontalPageMargin
