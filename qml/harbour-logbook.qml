@@ -79,7 +79,7 @@ ApplicationWindow
                 Label {
                     id: profile
                     width: parent.width
-                    text: accountId ? (accountId + "   (" + clientName + ")") : profileName
+                    text: profileName
                     color: content.success ? Theme.highlightColor : Theme.errorColor
                     Image {
                         anchors.right: date.left
