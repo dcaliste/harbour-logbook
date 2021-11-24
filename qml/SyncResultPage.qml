@@ -8,7 +8,7 @@ Page {
     property string clientProfile
     property date syncDate
     property bool scheduled: true
-    property int error
+    property alias error: errorLabel.error
     property var syncResults
     readonly property var _localListing: localAdditionsOrModifications(syncResults)
     readonly property var _remoteListing: remoteAdditionsOrModifications(syncResults)
@@ -63,44 +63,16 @@ Page {
 
     SilicaFlickable {
         anchors.fill: parent
-        contentHeight: header.height + content.height
-
-        PageHeader {
-            id: header
-            title: "Synced items"
-            description: (root.scheduled ? "automatic" : "manual") + " at " + Format.formatDate(root.syncDate, Format.Timepoint)
-        }
+        contentHeight: content.height
 
         Column {
             id: content
 
             width: parent.width
-            anchors.top: header.bottom
 
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                visible: error != SyncResults.NO_ERROR
-                wrapMode: Text.Wrap
-                text: {
-                    switch (error) {
-                    case SyncResults.ITEM_FAILURES:
-                        return "Some events were not synced, without preventing the sync process to complete."
-                    case SyncResults.AUTHENTICATION_FAILURE:
-                        return "Cannot authenticate to the server."
-                    case SyncResults.DATABASE_FAILURE:
-                        return "Error with the storage database."
-                    case SyncResults.ABORTED:
-                        return "Sync was aborted."
-                    case SyncResults.CONNECTION_ERROR:
-                        return "Network failure preventing sync to proceed."
-                    case SyncResults.LOW_BATTERY_POWER:
-                        return "Sync was ajourned due to low battery level."
-                    default:
-                        return "Some unknown error occured."
-                    }
-                }
-                color: Theme.secondaryHighlightColor
+            PageHeader {
+                title: "Synced items"
+                description: (root.scheduled ? "automatic" : "manual") + " at " + Format.formatDate(root.syncDate, Format.Timepoint)
             }
 
             Label {
@@ -116,14 +88,11 @@ Page {
                 source: listingView(root.clientProfile)
                 onLoaded: item.model = _localListing
             }
-            Label {
+            SyncErrorLabel {
+                id: errorLabel
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
-                visible: _localListing.length == 0
-                height: Theme.itemSizeSmall
-                text: "None"
-                color: Theme.secondaryHighlightColor
-                verticalAlignment: Text.AlignVCenter
+                visible: error != SyncResults.NO_ERROR
             }
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin

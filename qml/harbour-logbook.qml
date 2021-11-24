@@ -97,16 +97,14 @@ ApplicationWindow
                         color: Theme.secondaryHighlightColor
                     }
                 }
-                Label {
+                SyncErrorLabel {
                     anchors {
                         left:parent.left
                         leftMargin: Theme.paddingLarge
                         right:parent.right
                     }
                     visible: !content.success
-                    text: "error code: " + syncResults.minorCode
-                    color: Theme.highlightColor
-                    font.pixelSize: Theme.fontSizeSmall
+                    error: syncResults.minorCode
                 }
                 Repeater {
                     model: syncResults.results
