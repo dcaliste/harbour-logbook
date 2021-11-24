@@ -6,6 +6,5 @@ Exec=/usr/bin/sailjail -p harbour-logbook.desktop /usr/bin/sailfish-qml harbour-
 Comment=Browse Buteo sync logs
 
 [X-Sailjail]
-Permissions=Accounts;Calendar;Privileged;Synchronization
-OrganizationName=com.jolla
-ApplicationName=logbook
+Permissions=Accounts;Calendar;Email;Privileged;Synchronization
+ApplicationName=harbour-logbook
