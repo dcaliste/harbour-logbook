@@ -12,6 +12,8 @@ Page {
     property var syncResults
     readonly property var _localListing: localAdditionsOrModifications(syncResults)
     readonly property var _remoteListing: remoteAdditionsOrModifications(syncResults)
+    readonly property int _localDeletions: localDeletions(syncResults)
+    readonly property int _remoteDeletions: remotelDeletions(syncResults)
 
     function localAdditionsOrModifications(results) {
         var uids = []
@@ -31,6 +33,22 @@ Page {
             uids = uids.concat(results[i].remoteFailures)
         }
         return uids
+    }
+
+    function localDeletions(results) {
+        var n = 0
+        for (var i = 0; i < results.length; i++) {
+            n += results[i].localDeletions.length
+        }
+        return n
+    }
+
+    function remoteDeletions(results) {
+        var n = 0
+        for (var i = 0; i < results.length; i++) {
+            n += results[i].remoteDeletions.length
+        }
+        return n
     }
 
     function listingView(profile) {
@@ -89,6 +107,15 @@ Page {
                 color: Theme.secondaryHighlightColor
                 verticalAlignment: Text.AlignVCenter
             }
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+                visible: _localDeletions > 0
+                height: Theme.itemSizeSmall
+                text: "%1 incidence(s) deleted on device".arg(_localDeletions)
+                color: Theme.secondaryHighlightColor
+                verticalAlignment: Text.AlignVCenter
+            }
 
             Label {
                 width: parent.width - 2 * Theme.horizontalPageMargin
@@ -109,6 +136,15 @@ Page {
                 visible: _remoteListing.length == 0
                 height: Theme.itemSizeSmall
                 text: "None"
+                color: Theme.secondaryHighlightColor
+                verticalAlignment: Text.AlignVCenter
+            }
+            Label {
+                width: parent.width - 2 * Theme.horizontalPageMargin
+                x: Theme.horizontalPageMargin
+                visible: _remoteDeletions > 0
+                height: Theme.itemSizeSmall
+                text: "%1 incidence(s) remotely deleted".arg(_remoteDeletions)
                 color: Theme.secondaryHighlightColor
                 verticalAlignment: Text.AlignVCenter
             }
