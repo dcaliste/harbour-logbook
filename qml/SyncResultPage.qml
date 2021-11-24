@@ -12,8 +12,14 @@ Page {
     property var syncResults
     readonly property var _localListing: localAdditionsOrModifications(syncResults)
     readonly property var _remoteListing: remoteAdditionsOrModifications(syncResults)
-    readonly property int _localDeletions: localDeletions(syncResults)
-    readonly property int _remoteDeletions: remotelDeletions(syncResults)
+    readonly property string _itemDelegate: {
+        switch (clientProfile) {
+        case "caldav":
+            return "CaldavResultListView.qml"
+        default:
+            return ""
+        }
+    }
 
     function localAdditionsOrModifications(results) {
         var uids = []
@@ -35,32 +41,6 @@ Page {
         return uids
     }
 
-    function localDeletions(results) {
-        var n = 0
-        for (var i = 0; i < results.length; i++) {
-            n += results[i].localDeletions.length
-        }
-        return n
-    }
-
-    function remoteDeletions(results) {
-        var n = 0
-        for (var i = 0; i < results.length; i++) {
-            n += results[i].remoteDeletions.length
-        }
-        return n
-    }
-
-    function listingView(profile) {
-        switch (profile) {
-        case "caldav":
-            return "CaldavResultListView.qml"
-        default:
-            console.warn("not supported client profile: " + clientProfile)
-            return ""
-        }
-    }
-
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: content.height
@@ -75,65 +55,47 @@ Page {
                 description: (root.scheduled ? "automatic" : "manual") + " at " + Format.formatDate(root.syncDate, Format.Timepoint)
             }
 
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                text: "Downloaded from server"
-                horizontalAlignment: Text.AlignRight
-                color: Theme.highlightColor
-            }
-            Loader {
-                width: parent.width
-                active: _localListing.length > 0
-                source: listingView(root.clientProfile)
-                onLoaded: item.model = _localListing
-            }
             SyncErrorLabel {
                 id: errorLabel
                 width: parent.width - 2 * Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
                 visible: error != SyncResults.NO_ERROR
             }
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                visible: _localDeletions > 0
-                height: Theme.itemSizeSmall
-                text: "%1 incidence(s) deleted on device".arg(_localDeletions)
-                color: Theme.secondaryHighlightColor
-                verticalAlignment: Text.AlignVCenter
+            Item {
+                width: 1
+                height: Theme.paddingMedium
             }
 
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                text: "Sent to remote"
-                horizontalAlignment: Text.AlignRight
-                color: Theme.highlightColor
+            SyncItemListView {
+                title: "Downloaded from server"
+                delegate: _itemDelegate
+                itemUids: _localListing
+                deletedItemText: {
+                    var n = 0
+                    for (var i = 0; i < syncResults.length; i++) {
+                        n += syncResults[i].localDeletions.length
+                    }
+                    return n ? "%1 incidence(s) deleted on device".arg(n) : ""
+                }
+                visible: _itemDelegate.length > 0
             }
-            Loader {
-                width: parent.width
-                active: _remoteListing.length > 0
-                source: listingView(root.clientProfile)
-                onLoaded: item.model = _remoteListing
+            SyncItemListView {
+                title: "Sent to remote"
+                delegate: _itemDelegate
+                itemUids: _remoteListing
+                deletedItemText: {
+                    var n = 0
+                    for (var i = 0; i < syncResults.length; i++) {
+                        n += syncResults[i].remoteDeletions.length
+                    }
+                    return n ? "%1 incidence(s) remotely deleted".arg(n) : ""
+                }
+                visible: _itemDelegate.length > 0
             }
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                visible: _remoteListing.length == 0
-                height: Theme.itemSizeSmall
-                text: "None"
-                color: Theme.secondaryHighlightColor
-                verticalAlignment: Text.AlignVCenter
-            }
-            Label {
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                x: Theme.horizontalPageMargin
-                visible: _remoteDeletions > 0
-                height: Theme.itemSizeSmall
-                text: "%1 incidence(s) remotely deleted".arg(_remoteDeletions)
-                color: Theme.secondaryHighlightColor
-                verticalAlignment: Text.AlignVCenter
+            ViewPlaceholder {
+                enabled: _itemDelegate.length == 0
+                text: "no support for detailed logging"
+                hintText: "sync service: " + clientProfile
             }
         }
 
