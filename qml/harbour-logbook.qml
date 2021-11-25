@@ -103,7 +103,6 @@ ApplicationWindow
                         leftMargin: Theme.paddingLarge
                         right:parent.right
                     }
-                    visible: !content.success
                     error: syncResults.minorCode
                 }
                 Repeater {
