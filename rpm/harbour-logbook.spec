@@ -2,7 +2,7 @@ Name:       harbour-logbook
 Summary:    A QML GUI to visualise Buteo sync logs
 Version:    1.0
 Release:    1
-License:    LGPL
+License:    BSD
 URL:        https://github.com/dcaliste/harbour-logbook
 Source0:    %{name}-%{version}.tar.bz2
 Requires:  buteo-syncfw-qml-plugin >= 0.10.15
