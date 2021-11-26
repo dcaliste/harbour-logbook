@@ -20,6 +20,7 @@ rm -rf %{buildroot}
 
 mkdir -p %{buildroot}%{_datadir}/harbour-logbook/qml
 install -m 644 -p qml/harbour-logbook.qml %{buildroot}%{_datadir}/harbour-logbook/qml
+install -m 644 -p qml/SyncResultItem.qml %{buildroot}%{_datadir}/harbour-logbook/qml
 install -m 644 -p qml/SyncResultPage.qml %{buildroot}%{_datadir}/harbour-logbook/qml
 install -m 644 -p qml/SyncErrorLabel.qml %{buildroot}%{_datadir}/harbour-logbook/qml
 install -m 644 -p qml/SyncItemListView.qml %{buildroot}%{_datadir}/harbour-logbook/qml
