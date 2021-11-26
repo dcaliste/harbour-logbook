@@ -2,9 +2,9 @@
 Type=Application
 Name=Log book
 Icon=icon-launcher-mad-developer
-Exec=/usr/bin/sailjail -p harbour-logbook.desktop /usr/bin/sailfish-qml harbour-logbook
+Exec=sailfish-qml harbour-logbook
+X-Nemo-Application-Type=silica-qt5
 Comment=Browse Buteo sync logs
 
 [X-Sailjail]
 Permissions=Accounts;Calendar;Email;Privileged;Synchronization
-ApplicationName=harbour-logbook

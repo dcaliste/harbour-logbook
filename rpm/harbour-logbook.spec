@@ -8,6 +8,7 @@ Source0:    %{name}-%{version}.tar.bz2
 Requires:  buteo-syncfw-qml-plugin >= 0.10.15
 Requires:  nemo-qml-plugin-calendar-qt5 >= 0.6.27
 Requires:  sailfish-components-calendar-qt5 >= 1.0.32
+Requires:  libsailfishapp-launcher
 
 %description
 An application to browse the sync log from Buteo.
