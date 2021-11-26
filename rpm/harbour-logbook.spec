@@ -1,14 +1,15 @@
-Name:       harbour-logbook
-Summary:    A QML GUI to visualise Buteo sync logs
-Version:    1.0
-Release:    1
-License:    BSD
-URL:        https://github.com/dcaliste/harbour-logbook
-Source0:    %{name}-%{version}.tar.bz2
+Name:      harbour-logbook
+Summary:   A QML GUI to visualise Buteo sync logs
+Version:   1.0
+Release:   1
+License:   BSD
+URL:       https://github.com/dcaliste/harbour-logbook
+Source0:   %{name}-%{version}.tar.bz2
 Requires:  buteo-syncfw-qml-plugin >= 0.10.15
 Requires:  nemo-qml-plugin-calendar-qt5 >= 0.6.27
 Requires:  sailfish-components-calendar-qt5 >= 1.0.32
 Requires:  libsailfishapp-launcher
+BuildArch: noarch
 
 %description
 An application to browse the sync log from Buteo.
