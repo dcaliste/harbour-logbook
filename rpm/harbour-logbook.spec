@@ -28,14 +28,7 @@ install -m 644 -p qml/SyncErrorLabel.qml %{buildroot}%{_datadir}/harbour-logbook
 install -m 644 -p qml/SyncItemListView.qml %{buildroot}%{_datadir}/harbour-logbook/qml
 install -m 644 -p qml/CaldavResultListView.qml %{buildroot}%{_datadir}/harbour-logbook/qml
 mkdir -p %{buildroot}%{_datadir}/applications
-install -m 644 -p harbour-logbook.desktop %{buildroot}%{_datadir}/applications
-
-desktop-file-install --delete-original       \
-  --dir %{buildroot}%{_datadir}/applications             \
-   %{buildroot}%{_datadir}/applications/*.desktop
-
-%post
-/usr/bin/update-desktop-database -q
+desktop-file-install --dir %{buildroot}%{_datadir}/applications %{name}.desktop
 
 %files
 %defattr(-,root,root,-)
