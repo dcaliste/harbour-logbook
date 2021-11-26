@@ -10,8 +10,6 @@ Page {
     property bool scheduled: true
     property alias error: errorLabel.error
     property var syncResults
-    readonly property var _localListing: localAdditionsOrModifications(syncResults)
-    readonly property var _remoteListing: remoteAdditionsOrModifications(syncResults)
     readonly property string _itemDelegate: {
         switch (clientProfile) {
         case "caldav":
@@ -19,26 +17,6 @@ Page {
         default:
             return ""
         }
-    }
-
-    function localAdditionsOrModifications(results) {
-        var uids = []
-        for (var i = 0; i < results.length; i++) {
-            uids = uids.concat(results[i].localAdditions)
-            uids = uids.concat(results[i].localModifications)
-            uids = uids.concat(results[i].localFailures)
-        }
-        return uids
-    }
-
-    function remoteAdditionsOrModifications(results) {
-        var uids = []
-        for (var i = 0; i < results.length; i++) {
-            uids = uids.concat(results[i].remoteAdditions)
-            uids = uids.concat(results[i].remoteModifications)
-            uids = uids.concat(results[i].remoteFailures)
-        }
-        return uids
     }
 
     SilicaFlickable {
@@ -58,18 +36,23 @@ Page {
             SyncErrorLabel {
                 id: errorLabel
                 width: parent.width - 2 * Theme.horizontalPageMargin
+                height: implicitHeight + Theme.paddingLarge
                 x: Theme.horizontalPageMargin
                 visible: error != SyncResults.NO_ERROR
-            }
-            Item {
-                width: 1
-                height: Theme.paddingMedium
             }
 
             SyncItemListView {
                 title: "Downloaded from server"
                 delegate: _itemDelegate
-                itemUids: _localListing
+                itemUids: {
+                    var uids = []
+                    for (var i = 0; i < syncResults.length; i++) {
+                        uids = uids.concat(syncResults[i].localAdditions)
+                        uids = uids.concat(syncResults[i].localModifications)
+                        uids = uids.concat(syncResults[i].localFailures)
+                    }
+                    return uids
+                }
                 deletedItemText: {
                     var n = 0
                     for (var i = 0; i < syncResults.length; i++) {
@@ -91,7 +74,15 @@ Page {
             SyncItemListView {
                 title: "Sent to remote"
                 delegate: _itemDelegate
-                itemUids: _remoteListing
+                itemUids: {
+                    var uids = []
+                    for (var i = 0; i < syncResults.length; i++) {
+                        uids = uids.concat(syncResults[i].remoteAdditions)
+                        uids = uids.concat(syncResults[i].remoteModifications)
+                        uids = uids.concat(syncResults[i].remoteFailures)
+                    }
+                    return uids
+                }
                 deletedItemText: {
                     var n = 0
                     for (var i = 0; i < syncResults.length; i++) {
@@ -113,7 +104,7 @@ Page {
             ViewPlaceholder {
                 enabled: _itemDelegate.length == 0
                 text: "no support for detailed logging"
-                hintText: "sync service: " + clientProfile
+                hintText: "service: " + clientProfile
             }
         }
 
